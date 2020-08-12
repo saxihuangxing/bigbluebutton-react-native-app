@@ -71,7 +71,10 @@ export default class Signal extends EventEmitter {
         // Reply with a `pong` message to prevent the server from
         // closing the connection
         this.socket.send({ id: 'pong'});
-      }else {
+      }else if(message.id === 'pong'){
+
+      }
+      else {
         console.log("sfuconnect receive message " + JSON.stringify(message));
         this.emit("signalMessage", message);
       }

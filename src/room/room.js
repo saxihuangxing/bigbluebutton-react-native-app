@@ -8,7 +8,7 @@ import Media from "../Rtc/media";
 Meteor.connect('ws://' + config.host + '/html5client/sockjs/311/8iaejabm/websocket'); //do this only once
 const test = true;
 class Room {
-  async join(meetingID, fullName) {
+  async join(meetingID, fullName,callback) {
   /*  if(test){
       let url = await roomUtil.generatorApiUrl("getMeetings", {});
       let res = await axios.get(url);
@@ -44,7 +44,8 @@ class Room {
         "confname":enterInfo.confname};
       Meteor.call("validateAuthToken",params);
       let media = new Media(enterInfo);
-      media.push();
+      media.pull("",callback);
+
     } catch (e) {
       console.log('join room catch error: ' + e);
     }

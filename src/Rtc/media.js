@@ -18,7 +18,6 @@ export default class Media {
         this.videoSignal = new Signal({endpoint});
         this.pcs = {};
         this.videoSignal.on('signalMessage',(msg)=>{
-            console.log("videoSignal receive message " + JSON.stringify(msg));
             let query = `${msg.type}-${msg.role}-${msg.cameraId}`;
             let pc = this.pcs[query];
             if(!pc){
@@ -27,15 +26,18 @@ export default class Media {
             }
             switch (msg.id) {
                 case 'startResponse':
-                    pc.setRemoteDescription(msg.sdpAnswer);
+                    console.log(`${query} set remote  sdp ` + msg.sdpAnswer);
+                    pc.setRemoteDescription({"sdp":msg.sdpAnswer,"type":"answer"});
                     break;
                 case 'iceCandidate':
+                    console.log(`${query} add iceCandidate`);
                     pc.addIceCandidate(msg.candidate);
                     break;
                 case 'playStart':
                     console.log(`${query} playstart!!!!!!`);
                     break;
-
+                default:
+                    break;
             }
         })
     }
@@ -51,6 +53,16 @@ export default class Media {
             sdpOffer,
             selfCameraId:enterInfo.internalUserID,
             voiceBridge:enterInfo.voicebridge,
+        }
+    }
+
+    _generatorCandidateMsg(cameraId,candidate,role,type){
+        return{
+            cameraId,
+            id:"onIceCandidate",
+            role,
+            type,
+            candidate,
         }
     }
 
@@ -85,9 +97,11 @@ export default class Media {
             })
                 .then(stream => {
                     // Got stream!
-                    console.log(' Got stream!  === ');
+                    console.log(' Got stream!  === stream = ' + stream);
+                    pc.addStream(stream);
                 })
                 .catch(error => {
+                    console.log(' Got stream!  error === ' + JSON.stringify(error));
                     // Log error
                 });
         });
@@ -100,14 +114,47 @@ export default class Media {
             'DtlsSrtpKeyAgreement': 'true'
             }
         let desc = await  pc.createOffer(option);
-      //  console.log('desc === ' + JSON.stringify(desc));
         await   pc.setLocalDescription(desc);
         let startMsg = this._generatorStartMsg(this.enterInfo.internalUserID,desc.sdp,"share","video");
         this.pcs[`video-share-${this.enterInfo.internalUserID}`] = pc;
         console.log("pcs add pc " + `video-share-${this.enterInfo.internalUserID}`);
-    //    console.log('send  startMsg=== 1111' );
        this.videoSignal.send(startMsg);
-     //   console.log('send  startMsg=== 2222' );
 
+    }
+
+    async pull(cameraId,callback){
+        cameraId = "w_l3cqvbmuex6s";
+        const configuration = {'iceServers': [{'url': 'stun:139.159.203.208:3478'}]};
+        const pc = new RTCPeerConnection(configuration);
+        pc.onicecandidate = (event)=>{
+           // console.log("onicecandidate event = " + JSON.stringify(event.candidate));
+            if(event.candidate){
+                let msg = this._generatorCandidateMsg(cameraId,event.candidate,"viewer","video");
+                this.videoSignal.send(msg);
+            }
+        }
+
+        let option = {
+            'OfferToSendAudio': 'false',
+            'OfferToReceiveAudio': 'true',
+            'OfferToSendVideo': 'false',
+            'OfferToReceiveVideo': 'true',
+            'DtlsSrtpKeyAgreement': 'true'
+        }
+        let desc = await  pc.createOffer(option);
+        await   pc.setLocalDescription(desc);
+        pc.oniceconnectionstatechange = (state)=>{
+            console.log("oniceconnectionstatechange state:" + JSON.stringify(state));
+        }
+
+        pc.onaddstream = (event)=>{
+            console.log("pullvideo on add remote stream " );
+            callback(event.stream);
+        }
+
+        let startMsg = this._generatorStartMsg(cameraId,desc.sdp,"viewer","video");
+        this.pcs[`video-viewer-${cameraId}`] = pc;
+        console.log("pcs add pc " + `video-viewer-${cameraId}`);
+        this.videoSignal.send(startMsg);
     }
 }
