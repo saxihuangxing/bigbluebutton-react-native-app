@@ -5,10 +5,16 @@ import fxp from "fast-xml-parser";
 //import  Meteor,{withTracker, MeteorListView} from './react-native-meteor';
 import Meteor, {withTracker, MeteorListView} from './react-native-meteor/src/Meteor';
 import Media from "../Rtc/media";
-Meteor.connect('ws://' + config.host + '/html5client/sockjs/311/8iaejabm/websocket'); //do this only once
+import COLLECTION from "./constant";
 const test = true;
 class Room {
-  async join(meetingID, fullName,callback) {
+    constructor(){
+        this.commonParams = null;
+        this.joined = false;
+        this.enterInfo = null;
+
+    }
+  async join(meetingID, fullName) {
   /*  if(test){
       let url = await roomUtil.generatorApiUrl("getMeetings", {});
       let res = await axios.get(url);
@@ -42,13 +48,24 @@ class Room {
       let params = {"meetingId":enterInfo.meetingID,"requesterUserId":enterInfo.internalUserID,"requesterToken":enterInfo.authToken,
         "logoutURL":"https://106.52.36.117",sessionToken,"fullname":enterInfo.fullname,"externUserID":enterInfo.externUserID,
         "confname":enterInfo.confname};
+      this.enterInfo = enterInfo;
       Meteor.call("validateAuthToken",params);
-      let media = new Media(enterInfo);
-      media.pull("",callback);
+        Meteor.subscribe(COLLECTION.CURRENT_USER,params);
+        Meteor.subscribe(COLLECTION.USERS,params);
+        Meteor.subscribe(COLLECTION.VOICEUSERS,params);
+      this.commonParams = params;
+      this.joined = true;
+      let media =  Media.getInstance(enterInfo);
+      return media;
+     // media.pull("",callback);
 
     } catch (e) {
       console.log('join room catch error: ' + e);
     }
+  }
+
+  method(name,param){
+      Meteor.call(name,this.commonParams,param);
   }
 }
 let room = new Room();

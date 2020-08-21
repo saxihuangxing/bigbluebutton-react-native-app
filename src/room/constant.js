@@ -1,0 +1,25 @@
+let COLLECTION = {
+    USERS: 'users',
+    CURRENT_USER: 'current-user',
+    SCREEN_SHARE: 'screenshare',
+    ANNOTATIONS: 'annotations',
+    STREAM_ANNOTATIONS: 'stream-annotations',
+    BREAKOUTS: 'breakouts',
+    CAPTIONS: 'captions',
+    GROUP_CHAT: 'group-chat',
+    GROUP_CHAT_MSG: 'group-chat-msg',
+    MEETINGS: 'meetings',
+    NETWORK_INFORMATION: 'network-information',
+    NOTE: 'note',
+    POLLS: 'polls',
+    PRESENTATION_PODS: 'presentation-pods',
+    PRESENTATION_UPLOAD_TOKEN: 'presentation-upload-token',
+    PRESENTATIONS: 'presentations',
+    SLIDES: 'slides',
+    USERS_INFOS: 'users-infos',
+    USERS_SETTINGS: 'users-settings',
+    VOICEUSERS: 'voiceUsers',
+    WHITEBOARD_MULTI_USER: 'whiteboard-multi-user',
+};
+
+export default COLLECTION;
