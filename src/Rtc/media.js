@@ -55,6 +55,8 @@ export default class Media {
     static getInstance(enterInfo){
         if(!media){
             media = new Media(enterInfo);;
+        }else{
+            media.enterInfo = enterInfo;
         }
         return media;
     }

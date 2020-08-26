@@ -12,22 +12,22 @@
   "dependencies": {
     "@react-native-community/netinfo": "^5.9.5",
     "axios": "^0.19.2",
-    "fast-xml-parser": "^3.12.20",
-    "react": "16.13.1",
-    "react-native": "0.63.2",
-    "react-native-sha1": "^1.2.3",
-    "react-native-webrtc": "^1.84.0",
     "base-64": "^0.1.0",
     "crypto-js": "^3.1.6",
     "ejson": "^2.1.2",
+    "fast-xml-parser": "^3.12.20",
     "minimongo-cache": "0.0.48",
     "prop-types": "^15.5.10",
+    "react": "16.13.1",
     "react-komposer": "^1.8.0",
     "react-mixin": "^3.0.3",
+    "react-native": "0.63.2",
+    "react-native-navigation": "^6.12.0",
+    "react-native-sha1": "^1.2.3",
+    "react-native-webrtc": "^1.84.0",
     "trackr": "^2.0.2",
     "underscore": "^1.8.3",
     "wolfy87-eventemitter": "^4.3.0"
-
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

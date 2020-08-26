@@ -6,7 +6,6 @@ import fxp from "fast-xml-parser";
 import Meteor, {withTracker, MeteorListView} from './react-native-meteor/src/Meteor';
 import Media from "../Rtc/media";
 import COLLECTION from "./constant";
-const test = true;
 class Room {
     constructor(){
         this.commonParams = null;
@@ -14,25 +13,23 @@ class Room {
         this.enterInfo = null;
 
     }
-  async join(meetingID, fullName) {
-  /*  if(test){
-      let url = await roomUtil.generatorApiUrl("getMeetings", {});
+
+    async getAllMeetingInfos(){
+      let url = await roomUtil.generatorApiUrl('getMeetings');
       let res = await axios.get(url);
       let  meetingInfos  =  fxp.parse(res.data);
-      if(meetingInfos.response.returncode != "SUCCESS"){
-          return false;
+      if(meetingInfos.response.returncode != "SUCCESS" || meetingInfos.response.messageKey == 'noMeetings'){
+        return [];
       }
-      let meet =  meetingInfos.response.meetings.meeting.filter(iterator=>iterator.meetingName == "demomeeting");
-      if(!meet && meet.length > 0){
-        return false;
-      }
-      meetingID = meet[0].meetingID;
-      console.log("meetingID = " + meetingID);
-    }*/
+      let meetings =  meetingInfos.response.meetings.meeting;
+      return meetings;
+    }
 
+  async join(meetingID, fullName) {
     let url = await roomUtil.getJoinUrl(meetingID, fullName);
     try {
       let res;
+      console.log('join room url: ' + url);
       res = await axios.get(url);
       let meetingInfo;
       if(typeof res.data == 'object'){

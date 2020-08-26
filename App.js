@@ -23,9 +23,10 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import Room from './src/components/room/joinRoom';
+//import Room from './src/components/room/joinRoom';
+import RoomList from './src/components/room/roomList';
 
-const App: () => React$Node = () => {
+const App = (props) => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -33,26 +34,25 @@ const App: () => React$Node = () => {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
           <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <Room></Room>
+              <RoomList componentId = {props.componentId}/>
           </View>
         </ScrollView>
       </SafeAreaView>
     </>
   );
+};
+
+App.options = {
+  topBar: {
+    title: {
+      text: '房间大厅',
+      color: 'white'
+    },
+    background: {
+      color: '#4d089a'
+    }
+  }
 };
 
 const styles = StyleSheet.create({
@@ -95,3 +95,5 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+
+
