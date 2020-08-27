@@ -27,7 +27,7 @@ export default class LiveRoom extends Component {
     async componentDidMount() {
         if(this.state.login == 'loading'){
             this.media = await roomApi.join(this.meeting.meetingID,"huangxin");
-            this.selfId = roomApi.commonParams.internalUserID;
+            this.selfId = roomApi.commonParams.requesterUserId;
             this.setState({login:'success'});
         }
     }
@@ -39,7 +39,6 @@ export default class LiveRoom extends Component {
                 <Text>正在登录</Text>
             )
         }else if(login === 'success'){
-            console.log("videoProvider == " + VideoProvider);
             return(<VideoProvider media = {this.media} selfId = {this.selfId} />)
         }else if(login === 'failed'){
             return(<Text>加入房间失败</Text>)
@@ -62,6 +61,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: StatusBar.currentHeight || 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor:'red'
     },
     item: {
         backgroundColor: '#f9c2ff',

@@ -205,7 +205,7 @@ export default class Media {
     }
 
     stop(cameraId){
-        let key = Object.keys(this.pcs).forEach(key=>{return (key.split('-')[2] == cameraId)});
+        let key = Object.keys(this.pcs).find(key=>{return (key.split('-')[2] == cameraId)});
         if(key){
             let pc = this.pcs[key];
             let cameraId = key.split('-')[2];
@@ -214,6 +214,7 @@ export default class Media {
             this.videoSignal.send(msg);
             roomManage.method('userUnshareWebcam',cameraId);
             pc.close();
+            console.info(`media close pc ${key}`)
             delete this.pcs[key];
         }
     }

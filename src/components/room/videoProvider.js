@@ -12,11 +12,13 @@ import COLLECTION from '../../room/constant';
 Meteor.connect('ws://' + config.host + '/html5client/sockjs/311/8iaejabm/websocket'); //do this only once
 
 
-export  class Room extends Component {
+export  class VideoProvider extends Component {
     static displayName = 'EventList';
     constructor(props) {
+        console.log("VideoProvider construct");
         super(props);
-        this.media = null;
+        this.media = props.media;
+        this.selfId = props.selfId;
         this.subUserIds = [];
         this.state = {
             rtcViews:[{streamUrl:"",userId:null,use:false},{streamUrl:"",userId:null,use:false},
@@ -70,13 +72,13 @@ export  class Room extends Component {
     componentWillUnmount(){
         let workingIds = this.state.rtcViews.map(rtcView => {
             if(rtcView.use) {
-                this._releaseRtcView(rtcView.userId);
                 return rtcView.userId;
             }else{
                 return false;
             }
         });
         workingIds.forEach((id)=>{
+            this._releaseRtcView(id);
             if(this.media) {
                 this.media.stop(id);
             }
@@ -114,10 +116,9 @@ export  class Room extends Component {
     }
 
     async componentDidMount() {
-        console.log("join Room did Mount");
-        this.media = await room.join("demomeeting","huangxin");
-        this.selfId = room.commonParams.internalUserID;
-        let userId = room.enterInfo.internalUserID;
+        //this.media = await room.join("demomeeting","huangxin");
+        //this.selfId = room.commonParams.internalUserID;
+        let userId = this.selfId;
         let rtcView = this._getValidRtcView();
         rtcView.userId = userId;
         rtcView.use = true;
@@ -144,11 +145,15 @@ export  class Room extends Component {
         let rtcViews =  this.state.rtcViews;
         console.log(`render rtcViews === ${JSON.stringify(rtcViews)}`);
         return(
-            <View>
-                <RTCView style={{flex:1,width:100,height:50}} streamURL={rtcViews[0].streamUrl} objectFit={'contain'} zOrder={2} />
-                <RTCView style={{flex:1,width:100,height:50}} streamURL={rtcViews[1].streamUrl} objectFit={'contain'} zOrder={2} />
-                <RTCView style={{flex:1,width:100,height:50}} streamURL={rtcViews[2].streamUrl} objectFit={'contain'} zOrder={2} />
-                <RTCView style={{flex:1,width:100,height:50}} streamURL={rtcViews[3].streamUrl} objectFit={'contain'} zOrder={2} />
+            <View  style = {{flexDirection: 'column',backgroundColor:'green',width:'100%',height:'100%',}}>
+                <View style = {{flexDirection: 'row',flex:1,backgroundColor:'yellow',width:'100%',height:'50%'}}>
+                    <RTCView style={{flex:1,width:'50%',height:'100%'}} streamURL={rtcViews[0].streamUrl} objectFit={'cover'} zOrder={2} />
+                    <RTCView style={{flex:1,width:'50%',height:'100%'}} streamURL={rtcViews[1].streamUrl} objectFit={'cover'} zOrder={2} />
+                </View>
+                <View style = {{flexDirection: 'row',flex:1,backgroundColor:'blue',width:'100%',height:'50%'}}>
+                    <RTCView style={{flex:1,width:'50%',height:'100%'}} streamURL={rtcViews[2].streamUrl} objectFit={'cover'} zOrder={2} />
+                    <RTCView style={{flex:1,width:'50%',height:'100%'}} streamURL={rtcViews[3].streamUrl} objectFit={'cover'} zOrder={2} />
+                </View>
             </View>
         )
     }
@@ -159,4 +164,4 @@ export default Meteor.withTracker(params => {
     return {
         users: Meteor.collection(COLLECTION.USERS).find({has_stream:true,connectionStatus:'online'}),
     };
-})(Room);
+})(VideoProvider);

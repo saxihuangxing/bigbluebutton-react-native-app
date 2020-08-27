@@ -41,7 +41,6 @@ export default class DDP extends EventEmitter {
 
     this.messageQueue = new Queue(message => {
       if (this.status === 'connected') {
-        console.log("send meesage:" + message);
         this.socket.send(message);
         return true;
       } else {

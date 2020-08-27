@@ -22,10 +22,14 @@ class Room {
         return [];
       }
       let meetings =  meetingInfos.response.meetings.meeting;
+      if(!Array.isArray(meetings)){
+        meetings = [meetings];
+      }
       return meetings;
     }
 
   async join(meetingID, fullName) {
+    meetingID = meetingID.replace(' ','+');
     let url = await roomUtil.getJoinUrl(meetingID, fullName);
     try {
       let res;
