@@ -21,8 +21,7 @@ export  class VideoProvider extends Component {
         this.selfId = props.selfId;
         this.subUserIds = [];
         this.state = {
-            rtcViews:[{streamUrl:"",userId:null,use:false},{streamUrl:"",userId:null,use:false},
-                {streamUrl:"",userId:null,use:false},{streamUrl:"",userId:null,use:false}],
+            rtcViews:Array(4).fill({streamUrl:"",userId:null,use:false}),
         }
     }
 

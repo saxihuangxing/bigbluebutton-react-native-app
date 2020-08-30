@@ -2,6 +2,8 @@ import React , {Component} from 'react';
 import { SafeAreaView, Button,View,Alert, FlatList, StyleSheet, Text, StatusBar } from 'react-native';
 import roomApi from '../room/room';
 import VideoProvider from '../components/room/videoProvider';
+import DotsLoader from '../components/loading/loader/DotsLoader';
+import CommonStyle from '../style/style';
 
 export default class LiveRoom extends Component {
     static displayName = 'LiveRoom';
@@ -36,14 +38,22 @@ export default class LiveRoom extends Component {
         const login = this.state.login;
         if(login === 'loading'){
             return(
-                <Text>正在登录</Text>
+                <View style={CommonStyle.center}>
+                 <DotsLoader/>
+                </View>
             )
         }else if(login === 'success'){
             return(<VideoProvider media = {this.media} selfId = {this.selfId} />)
         }else if(login === 'failed'){
-            return(<Text>加入房间失败</Text>)
+            return(
+                <View style={CommonStyle.center}>
+                    <Text>加入房间失败</Text>)
+                </View>)
         }else{
-            return(<Text>错误的状态</Text>)
+            return(
+                <View style={CommonStyle.center}>
+                 <Text>错误的状态</Text>
+                </View>)
         }
     }
 

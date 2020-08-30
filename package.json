@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/art": "^1.2.0",
     "@react-native-community/netinfo": "^5.9.5",
     "axios": "^0.19.2",
     "base-64": "^0.1.0",
@@ -22,6 +23,7 @@
     "react-komposer": "^1.8.0",
     "react-mixin": "^3.0.3",
     "react-native": "0.63.2",
+    "react-native-indicator": "^1.2.2",
     "react-native-navigation": "^6.12.0",
     "react-native-sha1": "^1.2.3",
     "react-native-webrtc": "^1.84.0",

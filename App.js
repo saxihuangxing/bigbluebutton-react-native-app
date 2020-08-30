@@ -31,13 +31,13 @@ const App = (props) => {
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
-        <ScrollView
+    {/*    <ScrollView
           contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
+          style={styles.scrollView}>*/}
           <View style={styles.body}>
-              <RoomList componentId = {props.componentId}/>
+              <RoomList componentId = {props.componentId} style={{}}/>
           </View>
-        </ScrollView>
+       {/* </ScrollView>*/}
       </SafeAreaView>
     </>
   );
@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
   },
   body: {
     backgroundColor: Colors.white,
+    height:'100%',
   },
   sectionContainer: {
     marginTop: 32,

@@ -2,8 +2,11 @@ import React , {Component} from 'react';
 import { SafeAreaView, Button,View,Alert, FlatList, StyleSheet, Text, StatusBar } from 'react-native';
 import roomApi from '../../room/room';
 import { Navigation } from "react-native-navigation";
-
-
+/*import {CirclesLoader, PulseLoader, TextLoader, DotsLoader} from 'react-native-indicator';*/
+//import { aaaaaaa } from 'react-native-indicator';
+import CirclesLoader from '../loading/loader/CirclesLoader';
+import TextLoader from '../loading/loader/TextLoader';
+import CommonStyle from '../../style/style';
 
 const enterMeeting = (componentId,meeting) => {
     Navigation.push(componentId, {
@@ -24,14 +27,15 @@ const enterMeeting = (componentId,meeting) => {
 }
 
 export default class RoomList extends Component {
-    static displayName = 'EventList';
-
+    static displayName = 'RoomList';
     constructor(props) {
         super(props);
         this.componentId =  props.componentId;
         this.state = {
             meetings: [],
+            isLoading:true,
         }
+       // console.log("aaaaaaadd = " + aaaaaaa);
     }
 
     onClose = () => {
@@ -44,8 +48,9 @@ export default class RoomList extends Component {
 
     }
     async updateRoomData(){
+        this.setState({isLoading:true})
         let meetings =  await roomApi.getAllMeetingInfos();
-        this.setState({meetings:meetings})
+        this.setState({meetings:meetings,isLoading:false})
     }
     async componentDidMount() {
         this.updateRoomData();
@@ -53,10 +58,7 @@ export default class RoomList extends Component {
     }
 
 
-
-
-    render() {
-
+    renderRoomList(meetings){
         const Item = ({meeting}) => (
             <View style={styles.item}>
                 <Text style={styles.title}>{meeting.meetingName}</Text>
@@ -74,7 +76,29 @@ export default class RoomList extends Component {
                 <Item meeting={item}/>
             )
         };
+        return(
+            <FlatList
+                data={meetings}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+            />
+        )
+    }
+
+    renderLoading() {
+        return (
+            <View style={CommonStyle.center}>
+                <CirclesLoader/>
+                <TextLoader text="获取中"/>
+            </View>
+        );
+    }
+
+
+        render() {
+
         let meetings = this.state.meetings;
+        let isLoading = this.state.isLoading;
         //console.log("meetings == " + JSON.stringify(meetings));
         return (
             <SafeAreaView style={styles.container}>
@@ -84,11 +108,9 @@ export default class RoomList extends Component {
                     }}
                     title="刷新房间"
                 />
-                <FlatList
-                    data={meetings}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id}
-                />
+                {isLoading && this.renderLoading()}
+                {!isLoading && this.renderRoomList(meetings)}
+
             </SafeAreaView>
         );
     }
